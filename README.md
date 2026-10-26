@@ -32,8 +32,13 @@ El temporizador de vencimiento tampoco refresca datos.
 
 ## Instalar y conectar
 
-El nombre previsto en npm es `@e6tz/flags`; la publicación pública está pendiente. Una vez publicado, se instalará con `npm install @e6tz/flags`.
-Instala las fuentes del repositorio independiente con Node.js 20.9 o posterior y Git disponibles:
+Instala el paquete público desde npm con Node.js 20.9 o posterior:
+
+```sh
+npm install @e6tz/flags
+```
+
+También puedes instalar las fuentes del repositorio independiente con Git disponible:
 
 ```sh
 npm install github:Enry6tz/Flags#main
