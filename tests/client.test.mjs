@@ -173,6 +173,21 @@ test("HTTP provider uses GET without credentials, events or visitor context", as
   assert.equal(request.init.headers.has("Authorization"), false);
 });
 
+test("HTTP provider preserves relative and absolute endpoints and rejects invalid endpoints", async context => {
+  for (const endpoint of ["/flags?environment=test", "https://receiver.example/flags", "http://localhost:3000/flags"]) {
+    let requested;
+    const client = clientFor(context, { provider: createHttpFlagsProvider({ endpoint, fetch: async url => {
+      requested = url;
+      return Response.json({ data: delivery() });
+    } }) });
+    assert.equal((await client.load()).state, "ready");
+    assert.equal(requested, endpoint);
+  }
+  for (const endpoint of ["flags", "//receiver.example/flags", "https://user:password@receiver.example/flags", "https://receiver.example/flags#fragment", "file:///flags"]) {
+    assert.throws(() => createHttpFlagsProvider({ endpoint }), error => error instanceof FlagsError && error.code === "INVALID_ENDPOINT");
+  }
+});
+
 test("HTTP provider copies static headers and retains the selected fetch implementation", async context => {
   let header;
   const options = { endpoint: "/flags", headers: { "X-Provider": "original" }, fetch: async (_url, init) => { header = init.headers.get("X-Provider"); return Response.json({ data: delivery() }); } };

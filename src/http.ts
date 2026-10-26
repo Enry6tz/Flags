@@ -10,7 +10,7 @@ export interface HttpFlagsProviderOptions {
 
 function validateEndpoint(value: string): string {
   let endpoint: URL;
-  try { endpoint = new URL(value, "https://aside.invalid"); } catch { throw new FlagsError("INVALID_ENDPOINT"); }
+  try { endpoint = new URL(value, "https://flags.invalid"); } catch { throw new FlagsError("INVALID_ENDPOINT"); }
   if (!/^https?:$/.test(endpoint.protocol) || endpoint.username || endpoint.password || endpoint.hash || value.startsWith("//") || (!/^https?:\/\//.test(value) && !value.startsWith("/"))) throw new FlagsError("INVALID_ENDPOINT");
   return value;
 }

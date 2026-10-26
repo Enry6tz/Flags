@@ -1,33 +1,33 @@
-# @aside/flags
+# Flags
 
 Consultá flags booleanos desde un proveedor configurable, con fallback obligatorio en cada evaluación.
-Este paquete tiene su propia versión e instalación. El núcleo funciona sin React, ASIDE, Toolkit, reportes ni Performance.
+Este paquete tiene su propia versión e instalación. El núcleo funciona sin React ni otros productos.
 
 ## Instalar y conectar
 
-Este paquete es propio y no está publicado en npm. `npm install @aside/flags` no está disponible desde el registro público.
+El nombre previsto en npm es `@e6tz/flags`; la publicación pública está pendiente. Una vez publicado, se instalará con `npm install @e6tz/flags`.
 Instalá las fuentes del repositorio independiente con Node.js 20.9 o posterior y Git disponibles:
 
 ```sh
 npm install github:Enry6tz/Flags#main
 ```
 
-La instalación desde GitHub compila las fuentes con `prepare`. El paquete instalado conserva el nombre `@aside/flags` y los imports que aparecen en esta documentación.
+La instalación desde GitHub compila las fuentes con `prepare`. El paquete instalado conserva el nombre `@e6tz/flags` y los imports que aparecen en esta documentación.
 
 También podés instalar el archivo de la versión entregada o generado con `npm pack`:
 
 ```sh
-npm install ./aside-flags-0.1.1.tgz
+npm install ./e6tz-flags-0.1.1.tgz
 ```
 
-Configurá un proveedor compatible. ASIDE proporciona el endpoint desde la conexión de flags del proyecto.
+Configurá un proveedor compatible que entregue el contrato HTTP documentado más abajo.
 
 ```ts
-import { createFlagsClient, createHttpFlagsProvider } from "@aside/flags";
+import { createFlagsClient, createHttpFlagsProvider } from "@e6tz/flags";
 
 const flags = createFlagsClient({
   provider: createHttpFlagsProvider({
-    endpoint: "https://aside.example/api/integrations/flags/ENDPOINT_UUID",
+    endpoint: "https://flags.example/api/flags",
   }),
 });
 
@@ -47,7 +47,7 @@ La aplicación elige cuándo cargar o refrescar los flags.
 
 ## Usar React o Next.js
 
-Instalá React 18.3 o 19 para usar `@aside/flags/react`.
+Instalá React 18.3 o 19 para usar `@e6tz/flags/react`.
 El hook `useFlag(client,key,fallback)` devuelve los detalles de la evaluación.
 `useFlagsSnapshot(client)` devuelve el estado del proveedor.
 Los hooks no cargan datos automáticamente. En el servidor, `useFlag` usa el fallback para permitir una hidratación estable.
@@ -59,8 +59,8 @@ Admite la repetición de efectos de React Strict Mode.
 "use client";
 
 import { useEffect, useState } from "react";
-import { createFlagsClient, createHttpFlagsProvider, type FlagsClient } from "@aside/flags";
-import { useFlag } from "@aside/flags/react";
+import { createFlagsClient, createHttpFlagsProvider, type FlagsClient } from "@e6tz/flags";
+import { useFlag } from "@e6tz/flags/react";
 
 function Checkout({ client }: { client: FlagsClient }) {
   const flag = useFlag(client, "new-checkout", false);
@@ -73,7 +73,7 @@ export function CheckoutDisponible() {
   useEffect(() => {
     const flags = createFlagsClient({
       provider: createHttpFlagsProvider({
-        endpoint: "https://aside.example/api/integrations/flags/ENDPOINT_UUID",
+        endpoint: "https://flags.example/api/flags",
       }),
     });
     setClient(flags);
@@ -111,7 +111,7 @@ Una nueva solicitud usa el fallback hasta recibir su proyección válida.
 ### Contrato HTTP
 
 El endpoint es una URL HTTP(S) absoluta o una ruta relativa al mismo origen.
-ASIDE usa `GET /api/integrations/flags/:endpointId` y valida el origen autorizado.
+Tu servidor debe aceptar `GET` y validar el origen autorizado cuando corresponda.
 El endpoint público sólo entrega proyecciones booleanas. No uses tokens administrativos en el navegador.
 El proveedor HTTP usa `credentials: "omit"`, `cache: "no-store"` y `redirect: "error"`.
 
@@ -141,7 +141,7 @@ El paquete no identifica visitantes ni envía eventos, exposición, cookies, cam
 ### Inyectar otro proveedor
 
 ```ts
-import { createFlagsClient, type FlagsProvider } from "@aside/flags";
+import { createFlagsClient, type FlagsProvider } from "@e6tz/flags";
 
 const provider: FlagsProvider = async ({ signal }) => {
   const response = await fetch("/my-flags", { signal });
@@ -166,12 +166,14 @@ cd Flags
 npm install
 npm run typecheck
 npm test
+npm run test:package
 npm pack
 ```
 
 `npm install` compila automáticamente por medio de `prepare`; `npm run build` permite repetir la compilación.
-`npm pack` genera `aside-flags-0.1.1.tgz`, que puede instalarse en otra aplicación por su ruta local.
+`npm pack` genera `e6tz-flags-0.1.1.tgz`, que puede instalarse en otra aplicación por su ruta local.
+`npm run test:package` instala el tarball en una aplicación temporal externa, verifica el núcleo sin React, sus tipos y el adaptador con React. La carpeta temporal se informa al finalizar para su limpieza. GitHub Actions ejecuta tipos, tests y esta comprobación en Node.js 22 y 24.
 La compilación genera JavaScript ESM y declaraciones con imports `.js` compatibles con NodeNext.
 El export raíz no importa React. Cada versión se empaqueta sin depender de fuentes del monorepo.
 
-La licencia declarada es `UNLICENSED`; la disponibilidad del repositorio no concede una licencia MIT ni otra licencia de uso.
+Flags se distribuye bajo la [licencia MIT](LICENSE), incluida en el paquete.
