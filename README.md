@@ -1,5 +1,9 @@
 # Flags
 
+[Sitio web](https://flags.6tz.tech) · [npm: @e6tz/flags](https://www.npmjs.com/package/@e6tz/flags) · [MIT](LICENSE)
+
+[![Vista previa de Flags](docs/images/landing-preview.jpg)](https://flags.6tz.tech)
+
 Consulta flags booleanos desde un proveedor configurable, con fallback obligatorio en cada evaluación.
 Este paquete tiene su propia versión e instalación. El núcleo funciona sin React ni otros productos.
 
