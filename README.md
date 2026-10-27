@@ -7,6 +7,8 @@
 Consulta flags booleanos desde un proveedor configurable, con fallback obligatorio en cada evaluación.
 Este paquete tiene su propia versión e instalación. El núcleo funciona sin React ni otros productos.
 
+[Guía completa de integración con backend](docs/backend-integration.md) · [Documentación en el sitio](https://flags.6tz.tech/docs/)
+
 ## Integrar en una aplicación anfitriona
 
 Flags, Reports y Toolkit son bibliotecas para integrar en una aplicación existente.
